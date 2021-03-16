@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=0,maximum-scale=10,user-scalable=yes">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>&#40;주&#41;폴리큐브 인트라넷</title>
+    <meta name="author" content="김정은">
+    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon"> 
+    <link href="asset/fontawesome/css/fontawesome-all.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css?v1=">
+    <script src="js/jquery.min.js"></script>
+    <script src="js/init2.js"></script>
+<script>
+function fileCheck() {
+	var form = document.frm;
+	if (form.userfile.files[0].size > form.MAX_FILE_SIZE.value)
+	{
+		alert("첨부파일 사이즈는 30KB 이내로 등록 가능합니다. ");
+		return 0;
+	}
+}
+</script>
+</head>
+<body>
+<!-- 데이터 인코딩형 enctype은 꼭 아래처럼 설정해야 합니다 -->
+<form name="frm" enctype="multipart/form-data" action="file_upload.php" method="POST">
+    <!-- MAX_FILE_SIZE는 file 입력 필드보다 먼저 나와야 합니다 -->
+    <input type="hidden" name="MAX_FILE_SIZE" value="30000" />
+    <!-- input의 name은 $_FILES 배열의 name을 결정합니다 -->
+    이 파일을 전송합니다: <input name="userfile" type="file" />
+    <input type="submit" value="파일 전송" onclick="fileCheck()" />
+</form>
+</body>
+</html> 

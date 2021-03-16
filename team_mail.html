@@ -1,0 +1,70 @@
+<!--
+// PROGRAM NAME		: 팀 일일업무보고 mail template
+-->
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+	<meta http-equiv="cache-control" content="no-cache">
+	<meta http-equiv="expires" content="-1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="X-UA-Compatible" content="ie=edge">
+	<meta name="author" content="김정은">
+    <title>&#40;주&#41;폴리큐브 인트라넷</title>
+    <link rel="shortcut icon" href="http://intra.polycube.co.kr:8888/images/favicon.ico" type="image/x-icon">
+    <link href="http://intra.polycube.co.kr:8888/asset/fontawesome/css/fontawesome-all.css" rel="stylesheet">
+    <style>
+    body{background-color:#ddd}
+    .clearfix:after{display: block;clear: both;content: ''}
+    .wrap .sidebar{left:0}
+    .wrap .logo{background-color: #fff;height:55px;}
+    .bg{display: none !important}
+
+.container{margin-top:48px;}
+.container_inner{max-width:650px;margin: 0 auto;box-sizing:border-box}
+.container_inner h4{margin-bottom:15px;font-size:14px;font-weight:bold;color:#0f5b8d}
+.edit_task .user_name{font-weight:bold;margin-bottom:16px;background-color:#eee;border-top:1px solid #ddd;border-bottom:1px dashed #ddd;padding:10px 5px;font-size:14px;color:#333}
+.edit_task{box-sizing:border-box;}
+.edit_task h4{font-weight: bold;color:#297FB8;font-size:13px;margin:10px 0 20px}
+.edit_task strong{margin-right:5px;font-weight: bold}
+.edit_task strong:after{
+    clear:both;
+    display: inline-block;
+    content: ' ) ';
+    padding:0 5px;
+    font-weight: normal;
+    font-size: 14px;
+    /*color: #999;*/
+}
+.edit_task .user_txt{font-size:13px;color:#444;margin:10px 0 20px 20px;line-height:1.6}
+.edit_task .section:last-child{margin-top: 30px;}
+.edit_task .user_title{font-weight: bold;font-size: 14px;}
+.task_head {text-align:center;padding:20px 15px;background-image:url('http://intra.polycube.co.kr:8888/images/pattern.svg'),linear-gradient(to right, #126CFA 0, #108AEC 100%);background-position:right center,center center;background-repeat:no-repeat;}
+.task_head .task_title{font-weight:bold;font-size:18px;color:#fff}
+.task_head .task_date{margin-top:10px;color:#ededed;font-size:13px;}
+.edit_wrap {overflow:hidden;background-color:#fff;border-radius:15px;}
+.email_wrap{padding:15px;}
+</style>
+</head>
+<body>
+    <div class="wrap">
+        <!--s:여기서부터 일일업무 보고가 시작됩니다.-->
+        <div class="container">
+            <div class="container_inner edit_wrap mail_report clearfix"> 
+                <div class="edit_task"> 
+					<div class="task_head">
+						<div class="task_title"> polycube [post] 일일업무보고</div>
+						<div class="task_date">[date]</div>
+					</div>
+                    <div class="email_wrap">
+						
+						[htmlBody]	
+						
+					</div><!--//email_wrap>-->
+                   
+				</div><!--//edit_task>-->
+            </div><!--//container_inner>
+        </div><!--//container-->
+    </div><!--//wrap-->
+</body>
+</html>

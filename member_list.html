@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=0,maximum-scale=10,user-scalable=yes">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>&#40;주&#41;폴리큐브 인트라넷</title>
+    <meta name="author" content="김정은">
+    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon"> 
+    <link href="asset/fontawesome/css/fontawesome-all.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css?v1=">
+    <script src="js/jquery.min.js"></script>
+    <script src="js/init2.js"></script>
+<script>
+//console.log("totalcnt : <?=$totalcnt?>");
+	function search() {
+		var form = document.frm;
+		form.action = "./<?=$pgmId?>";
+
+		if (form.searchField.value!=''&&form.searchWord.value=='')
+		{	
+			alert('검색내용을 입력하세요'); 
+			form.searchWord.focus();
+			return 0;
+		}
+		//if (form.searchField.value.match(/date/)) {  
+        //    var regExp =  /(19[7-9][0-9]|20\d{2})-(0[0-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])/g;
+        //    if (!regExp.test(form.searchWord.value))
+        //    {
+        //        alert('날짜 형식(YYYY-MM-DD)에 맞지 않습니다.'); 
+        //        form.searchWord.focus(); return 0;
+        //    }
+        //}
+
+
+
+		form.submit();
+	}
+	function setPlaceholder(select) {
+		if (select.value.indexOf('post') > -1)
+		{
+			$( '#searchWord' ).attr( 'placeholder', '2(스마트사업본부),4(기술연구소),5(디자인실) 중 하나를 입력하세요.' );
+		} else {
+			$( '#searchWord' ).attr( 'placeholder', '검색할 내용을 입력해주세요.' );
+		}
+		$( '#searchWord' ).focus();
+	}
+</script>
+</head>
+<body>
+    <div class="bg"></div>
+    <div class="wrap">
+        <div class="header">
+            <div class="account clearfix">
+                <div class="btn_bars"><i class="fas fa-bars"></i></div>
+                <div class="btn_info">
+                    <a href="#" class="user_name"><span>BA2</span> 박이정<i class="fas fa-chevron-down"></i></a>
+                    <ul>
+                        <li><a href="mypage.php">내정보수정</a></li>
+                        <li><a href="logout.php">로그아웃</a></li>
+                    </ul>
+                   
+                </div>
+            </div><!--//account-->
+            <button type="button" class="btn_mobile_menu">
+                <i class="ico_menu"></i>
+            </button>
+            <div class="m_logo"><a href="/main.php"><img src="images/polycube.b.png" alt="logo"></a></div> 
+        </div><!--header-->
+        <div class="sidebar">
+            <div class="logo">
+                <a href="/main.php"><img src="images/polycube.png" alt="logo"></a>
+                <div class="about"><span>BA2</span> 박이정</div>
+            </div>
+            <ul>
+                <li><a href="#">데이터사전</a>
+                    <ul class="depth">
+                        <li class="on"><a href="#"><i class="fas fa-book"></i>행정단어</a></li><!-- fas fa-edit -->
+                        <li><a href="#"><i class="far fa-square"></i>도메인</a></li><!-- far fa-window-maximize -->
+                        <li><a href="#"><i class="fas fa-cube"></i>단어</a></li><!-- fas fa-address-book, far fa-file-word-->
+                        <li><a href="#"><i class="fas fa-cubes"></i>용어</a></li>
+                    </ul>
+                </li>
+                <li><a href="#">관리도구</a>
+                    <ul class="depth">
+                        <li><a href="#"><i class="fas fa-user"></i>직원정보</a></li>
+                        <li><a href="#"><i class="fas fa-address-book"></i>부서정보</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <ul class="m_page">
+			    <li><a href="mypage.php">내정보수정</a></li>
+			    <li><a href="logout.php">로그아웃</a></li>
+		    </ul>
+        </div><!--//sidebar-->
+        
+         <!--s:여기서부터 본문 시작됩니다.-->
+         <div class="container">
+            <div class="title"><h1>직원정보</h1></div>
+            <div class="write">
+                <div class="write_inner">
+					<div class="write_search">
+					<form name="frm" method="GET" onsubmit="search()" >
+					    <input type="checkbox" name="onoff" value="0"  onChange="search()" /> 비활성 &nbsp;
+						<select name="post" id="post" onChange="search()" class="selectp">
+							   <option value=''> -- 부서 선택 -- </option>
+							
+						</select>
+						<select name="searchField" id="searchField" onChange="setPlaceholder(this)"  class="selectp">
+								<option value=''> -- 검색선택 -- </option>
+								<option value="name" >이름</option>
+								<option value="id" >ID</option>
+						</select>
+						<input type="text" name="searchWord" id="searchWord" value="" placeholder="검색할 내용을 입력해주세요"  class="inputp"
+										   onkeypress="if(event.keyCode==13) {search(); return false;}"/>
+					</form>
+					</div>
+					<a href="member_edit.php"><i class="fas fa-edit"></i>등록</a>
+				</div> 
+				
+			</div>
+            <div class="container_inner task_list_wrap">
+               
+                <div class="task_list">
+                    <form action="">
+                        <fieldset disabled="disabled">
+                            <table id="list_t">
+                                <caption>직원정보</caption>
+                                <thead>
+                                    <tr >
+                                        <th>번호</th>
+                                        <th>ID</th>
+                                        <th>이름</th>
+                                        <th>부서</th>
+                                        <th>활성</th>
+                                        <th>순서</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+							
+
+                                   <tr class="scrolling" data-rn="<?=$rn?>" onclick="location.href='member_edit.php?idx=<?=$idx?>'">
+                                       <td></td>
+                                       <td></td>
+                                       <td></td>
+                                       <td></td>
+                                       <td></td>
+                                       <td></td>
+                                   </tr>
+
+							
+                                </tbody>
+                            </table>
+                        </fieldset>
+                    </form>
+                   
+                </div><!--//task_list-->
+            </div>
+        </div><!--//본문-->
+    </div><!--//wrap-->
+
+
+
+</body>
+</html>

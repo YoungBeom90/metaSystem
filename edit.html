@@ -1,0 +1,182 @@
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>폴리큐브 인트라넷</title>
+    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
+    <link href="asset/fontawesome/css/fontawesome-all.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="js/jquery.min.js"></script>
+    <script src="js/init2.js"></script>
+
+</head>
+<body>
+    <div class="bg"></div>
+    <div class="wrap">
+        <div class="header">
+            <div class="account clearfix">
+                <div>
+                    <a href="#" class="user_name"><span>디자인실</span> 김정은<i class="fas fa-chevron-down"></i></a>
+                    <ul>
+                        <li><a href="mypage.php">비밀번호 변경</a></li>
+                        <li><a href="logout.php">로그아웃</a></li>
+                    </ul>
+                   
+                </div>
+            </div><!--//account-->
+            <button type="button" class="btn_mobile_menu">
+                <i class="ico_menu"></i>
+            </button>
+            <div class="m_logo"><a href="#"><img src="images/polycube.b.png" alt="logo"></a></div> 
+        </div><!--header-->
+
+
+        <div class="sidebar">
+            <div class="logo">
+                <a href="#"><img src="images/polycube.png" alt="logo"></a>
+                <div class="about"><span>디자인실</span> 김정은</div>
+            </div>
+            <ul>
+                <li><a href='#'>사업부 별 커뮤니티</a>
+                    <ul class='depth'>
+                        <li><a href='daily_report.php'><i class='fas fa-edit'></i>개인 일일업무보고</a></li>
+                        <li ><a href='team_report.php'><i class='fas fa-address-book'></i>팀 일일업무보고</a></li>
+                        <li ><a href='weekly_report.php'><i class='far fa-window-maximize'></i>주간 업무보고</a></li>
+                        <li class="on"><a href='staff_report.php'><i class='fas fa-calendar-alt'></i>팀장 업무보고</a></li>
+                    </ul>
+                </li>
+                <li><a href='#'>관리도구</a>
+                    <ul class='depth'>
+                        <li ><a href='memeber_edit.php?nmode=R'><i class='fas fa-user-plus'></i>직원정보 등록</a></li>
+                        <li ><a href='memeber_edit.php?nmode=E'><i class='fas fa-user'></i>직원정보 수정</a></li>
+                        <li ><a href='memeber_edit.php?nmode=E'><i class='fas fa-sync-alt'></i>업무보고 순서</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <ul class="m_page">
+                <li><a href="mypage.php">비밀번호 변경</a></li>
+                <li><a href="logout.php">로그아웃</a></li>
+            </ul>
+            <div class="copyright"><a href="http://polycube.co.kr/v2/">© 2018 POLYCUBE. All Rights Reserved.</a></div>
+        </div><!--//sidebar-->
+        
+        <!--s:여기서부터 일일업무 보고가 시작됩니다.-->
+        <div class="container">
+            <div class="title"><h1>개인 일일업무 보고</h1></div>
+            <div class="container_inner edit_wrap clearfix"> 
+                <div class="edit_form">
+                    <form method="post">
+                        <div class="date_wrap">
+                                <select name="tyear">
+                                    <option value="2016">2016</option>
+                                    <option value="2017">2017</option>
+                                    <option value="2018" selected>2018</option>
+                                    <option value="2019">2019</option>
+                                    <option value="2020">2020</option>
+                                </select>
+                                년
+                                <select name="tmonth">
+                                    <option value="02">2</option>
+                                    <option value="03" selected>3</option>
+                                    <option value="04">4</option>
+                                </select>
+                                월
+                                <select name="tday">
+                                    <option value="14">14</option>
+                                    <option value="15" selected>15</option>
+                                    <option value="16">16</option>
+                                </select>
+                                일
+                                <input type="button" value="업무 조회">
+
+                                <span class="today">2018년 3월 15일 일일업무 보고</span>
+                                
+                            </div>
+                        <fieldset>
+                            <legend>개인 일일업무 보고</legend> 
+                            <table class="board_write">
+                                <caption>개인 일일업무 보고에 대한 정보입력 리스트</caption>
+                                <tr>
+                                    <th>선택</th>
+                                    <td class="task_check">
+                                        <input type="radio" id="main_task" name="task_check" onclick="checkValue(this.id)" checked/><label for="main_task">주요업무</label>
+                                        <input type="radio" id="other_task" name="task_check" onclick="checkValue(this.id)"/><label for="other_task">기타업무</label>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th><label for="subject">제목</label></th> 
+                                    <td><input name="subject"  id="subject" type="text" placeholder="제목을 입력해주세요." required/></td>
+                                </tr>      
+                                <tr>
+                                    <th>내용</th>
+                                    <td>
+                                        <textarea name="" id="" placeholder="내용을 입력해주세요." required/></textarea>
+                                    </td>
+                                </tr>       
+                            </table>
+                            <a href="#" class="my_task">작성글 목록</a>
+                            <div class="btn_edit">
+                                <input type="reset" class="btn_reset" value="초기화" />
+                                <input type="submit" class="btn_submit" value="제출" />
+                            </div>
+                        </fieldset>
+                    </form>
+                </div><!--//-->
+                <div class="edit_task"> 
+                    <div class="task_title">&#91;업무보고 완료 / 팀보고 전&#93;</div>
+                    <div class="section">
+                        <h4>:: 주요업무</h4>
+                        <div class="user_title">
+                            <strong>1</strong>첫번째 주요업무 제목
+                        </div>
+                        <div class="user_txt">
+                            - txt를 그대로 출력 긴 텍스트가 들어갈시 나타나는 화면  긴 텍스트가 들어갈시 나타나는 화면  긴 텍스트가 들어갈시 나타나는 화면</br>
+                            - txt를 그대로 출력 중간 텍스트가 들어가는 화면</br>
+                            - txt를 그대로 출력</br>
+                        </div>
+
+                        <div class="user_title">
+                            <strong>2</strong>두번째 주요업무 제목
+                        </div>
+                        <div class="user_txt">
+                            - txt를 그대로 출력</br>
+                            - txt를 그대로 출력</br>
+                        </div>
+                    </div><!--//주요업무-->
+
+                    <div class="section">
+                        <h4>:: 기타업무</h4>
+                        <div class="user_title">
+                            <strong>1</strong>첫번째 주요업무 제목
+                        </div>
+                        <div class="user_txt">
+                            - txt를 그대로 출력</br>
+                            - txt를 그대로 출력</br>
+                            - txt를 그대로 출력</br>
+                        </div>
+
+                        <div class="user_title">
+                            <strong>2</strong>두번째 주요업무 제목
+                        </div>
+                        <div class="user_txt">
+                            - txt를 그대로 출력</br>
+                            - txt를 그대로 출력</br>
+                        </div>
+                    </div><!--//기타업무-->
+                </div>
+                   
+                
+            </div><!--//edit_form-->
+        </div><!--//container-->
+
+
+
+    </div><!--//wrap-->
+    <script>
+
+    </script>
+</body>
+</html>

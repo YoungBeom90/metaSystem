@@ -1,0 +1,403 @@
+<?
+//--------------------------------------------------------------------------
+// PROJECT NAME		: intranet
+// SYSTEM NAME		: 
+// PROGRAM ID		: member_edit.php
+// PROGRAM NAME		: 직원 등록/수정 화면
+// VERSION			: v1.3
+// DESCRIPTION		:
+//--------------------------------------------------------------------------
+//					 VERSION HISTORY
+// v1.0	: 2018-03-21, 최초작성 - 박이정(폴리큐브)
+// v1.1	: 2018-04-26, flag:테마코디여부 - 박이정(폴리큐브) 코디는 테마 수정은 가능하나 매출금액은 볼 수 없다. 출시권한인 경우 테마수정, 매출금액 모두 볼 수 있다.
+//                                    5:프리디자인활동여부 인경우 테마정산화면 디자이너 조회시 앞쪽에 나온다.  
+// v1.2	: 2018-10-02, mm:투입기여도 포함여부 추가 - 박이정(폴리큐브)
+// v1.3 : 2018-10-10, 투입기여도 사람마다 다르게 즉, mm 1~10범위로 - 박이정(폴리큐브)
+//--------------------------------------------------------------------------
+
+//---------------------------------------------------------
+// Include
+//---------------------------------------------------------
+require("_inc/config.inc");
+require("_inc/error_control.inc");
+require("_inc/mydb_class.inc");
+require("_inc/menu_data.inc");
+require("_inc/_loginchk.inc");
+require("_inc/_paging.inc");
+
+$menuId = "member";
+
+$idx			= isset($_REQUEST['idx']) ? $_REQUEST['idx'] : "";				
+$pageNo			= isset($_REQUEST['pageNo']) ? $_REQUEST['pageNo'] : 1;				// 페이지번호
+//$panId			= isset($_REQUEST['panId']) ? $_REQUEST['panId'] : '';				// 판id
+//$searchField	= isset($_REQUEST['searchField']) ? $_REQUEST['searchField'] : "";		// 검색항목
+//$searchWord		= isset($_REQUEST['searchWord']) ? $_REQUEST['searchWord'] : "";		// 검색내용
+
+$strTitle = "직원 등록";
+$strbutton = "등록";
+$nmode="R"; // 등록(Register)mode
+
+$db = new mydb();
+//-- 프로젝트 조회
+$qry =  "     SELECT a.pidx ,a.title, a.content, a.wdate, a.wid, a.wusername, a.onoff "
+	   ."     FROM project_tbl a "
+	   ."     WHERE onoff=1 " 
+	   ."     ORDER BY a.pidx desc "
+;
+
+$stmt = $db->prepare($qry);
+if (!$stmt) { echo "stmt prepare error\n<br>$qry"; exit; }
+//$stmt->bind_param("ii", $firstIndex, $lastIndex);		//i(integer), d(double), s(string), b(blob binery)
+//$firstIndex = (($pageNo-1) * $RECORD_CNT) +1;	//$RECORD_CNT :_paging.inc
+//$lastIndex = $pageNo * $RECORD_CNT;				
+$stmt->execute();	// 실행
+$lists = get_stmt_assoc_array($stmt);  // _paging.inc
+$stmt->close();		//stmp 종료
+
+$id = ''; $pwd = ''; $name = ''; $hpnum = ''; $mobile = ''; $landnum = ''; $companyemail = ''; $personemail = ''; $post = '-1';
+$team = ''; $part = ''; $auth_menu = 'daily_r;weekly_r'; $projects=''; $duty = ''; $category = ''; $wdate = ''; $onoff = ''; $charger = '9'; 
+$disporder = '';  $mainorder = ''; $flag = '9'; $onoff = 1; $mm = 10;
+
+if($idx != "")
+{
+	
+	$strTitle = "직원 수정";
+	$strbutton = "수정";
+	$nmode = "E"; // 수정(Edit)mode
+
+	// 수정할 데이터 조회
+	
+
+	$qry = "SELECT id, name, hpnum, mobile, landnum, companyemail, personemail, post, team, part, auth_menu, projects "
+	      ."      ,duty, category, wdate, onoff, charger, disporder,  mainorder, flag, onoff, mm   "
+	      ."  FROM member_tbl "
+		  ." WHERE idx = ? ";
+
+	$stmt = $db->prepare($qry);
+	$stmt->bind_param('i', $idx);
+	$stmt->execute();
+	$stmt->bind_result( $id,$name,$hpnum,$mobile,$landnum, $companyemail,$personemail,$post,$team,$part,$auth_menu,$projects
+		              , $duty,$category,$wdate,$onoff,$charger,$disporder,$mainorder,$flag, $onoff, $mm);
+	$stmt->fetch();
+	$stmt->close();
+}
+
+$db->close();
+
+?>
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="author" content="김정은">
+    <title>&#40;주&#41;폴리큐브 인트라넷</title>
+    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon"> 
+    <link href="asset/fontawesome/css/fontawesome-all.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css?v1=">
+    <script src="js/jquery.min.js"></script>
+    <script src="asset/jquery-ui.min.js"></script> <!--//member_order에만 적용되는 js -->
+    <script src="js/init2.js"></script>
+    <style>
+     /* @media screen and (min-width:768px){
+        body{background:url(images/bg_1.jpg)no-repeat top left,center center,bottom center;background-size:cover;background-attachment:fixed ,fixed,fixed}
+      } */
+    </style>
+<script  language="JavaScript">
+console.log("<?=$auth_menu?>");
+function actionSubmit()
+{
+	var form = document.RegFrm;
+	form.action = "./member_save.php";
+	var regExp;
+
+	if(form.name.value=='') {
+		alert("이름을 입력해 주세요");
+		form.name.focus(); return 0;
+	} 
+	if(form.id.value=='') {
+		alert("아이디를 입력해 주세요");
+		form.id.focus(); return 0;
+	} else {
+		form.id.value = form.id.value.toLowerCase();
+	}
+	if(form.pwd.value=='' && form.nmode.value == 'R') {
+		alert("비밀번호를 입력해 주세요");
+		form.pwd.focus(); return 0;
+	}
+
+	if(form.post.value=='') {
+		alert("부서를 선택해 주세요");
+		form.post.focus(); return 0;
+	}
+	if(form.duty.value=='') {
+		alert("직위를 선택해 주세요");
+		form.duty.focus(); return 0;
+	}
+
+
+	cb = document.getElementsByName("auth_menu[]");
+	check = false;
+	for(var i = 0; i < cb.length; i++) {
+		if(cb[i].checked) {
+			check = true;
+		}
+	}
+	if(!check) {
+		alert('사용할 메뉴를 선택하세요.'); return 0;
+	}
+
+	cb = document.getElementsByName("projects[]");
+	check = false;
+	for(var i = 0; i < cb.length; i++) {
+		if(cb[i].checked) {
+			check = true;
+		}
+	}
+	if(!check) {
+		alert('프로젝트를 선택하세요.'); return 0;
+	}
+	if (form.mm.value)
+	{
+		if(form.mm.value < 0 || form.mm.value > 1) {
+			alert("프로젝트 투입기여도를 범위(0~1)에 맞도록 입력해 주세요");
+			form.mm.focus(); return 0;
+		}
+	}
+	if(form.hpnum1.value=='') {
+		alert("휴대전화번호를 입력해 주세요");
+		form.hpnum1.focus(); return 0;
+	}
+	if(form.hpnum2.value=='') {
+		alert("휴대전화번호를 입력해 주세요");
+		form.hpnum2.focus(); return 0;
+	}
+	if(form.hpnum3.value=='') {
+		alert("휴대전화번호를 입력해 주세요");
+		form.hpnum3.focus(); return 0;
+	}
+	if(form.companyemail.value=='') {
+		alert("이메일을 입력해 주세요");
+		form.companyemail.focus(); return 0;
+	} 
+
+
+	if(form.nmode.value == 'R') {
+		alert("직원등록 후에는 업무보고 순서 메뉴에서 프로젝트 투입기여도 순서를 부서별로 조정해 주세요~~");
+	}
+	form.submit();
+}
+
+
+function actionDelete()
+{
+	if (confirm("비활성하시겠습니까?"))
+	{
+		var form = document.RegFrm;
+		form.action = "./member_save.php";
+		form.nmode.value = "D"; // 삭제mode
+		form.submit();
+	}
+}
+
+</script>
+</head>
+<body>
+    <div class="bg"></div>
+    <div class="wrap">
+
+        <?require("_inc/_top.inc");?>
+        <?require("_inc/_menu.inc");?>
+
+        <div class="container">
+		
+            <div class="title"><h1><?=$strTitle?></h1></div>
+            <div class="container_inner user_wrap">
+                <h4> :: 직원정보를 입력해주세요.</h4>
+                <div class="user_form">
+                    <form name="RegFrm" method="post" action="" enctype="multipart/form-data">
+					<input type="hidden" name="nmode" value="<?=$nmode?>">
+					<input type="hidden" name="idx" value="<?=$idx?>">
+					<input type="hidden" name="pageNo" value="<?=$pageNo?>">
+                    <fieldset>
+                            <legend><?=$strTitle?></legend>
+                            <table>
+                                <caption>직원정보 등록에 대한 정보입력 리스트</caption>
+                                <tr>
+                                    <th><label for="name">직원 이름</label></th>
+                                    <td><input type="text" name="name" id="name" value="<?=$name?>"></td>
+                                    
+                                </tr>
+
+                                <tr>
+                                    <th><label for="id">아이디 입력</label></th>
+                                    <td>
+                                        <input type="text" name="id" id="id" value="<?=$id?>">
+                                        <span>※ 0~12자의 영문 소문자와 숫자만 사용할 수 있습니다.</span>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <th><label for="pwd">비밀번호 입력</label></th>
+                                    <td><input type="password" name="pwd" id="pwd"  value=""></td>
+                                </tr>
+
+                                <tr>
+                                    <th>해당부서 선택</th>
+                                    <td>
+                                        <select name="post" id="post">
+                                            <option value=''> -- 부서 선택 -- </option>
+										<?	foreach ($POST as $key => $value) { ?>
+                                            <option value="<?=$key?>" <?if($key==$post){ echo "selected";}?>><?=$value?></option>
+										<?  } ?>
+                                        </select>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <th>해당 직위 선택</th>
+                                    <td>
+										<select name="duty" id="duty">
+                                            <option value=''> -- 직위 선택 -- </option>
+                                        <?	foreach ($DUTY as $key => $value) { ?>
+                                            <option value="<?=$key?>" <?if($key==$duty){ echo "selected";}?>><?=$value?></option>
+										<?  } ?>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <!--직원정보 수정 form에만 들어가는 입력문-->
+                                <tr class="authSelect">
+                                    <th>메뉴 권한</th>
+                                    <td>
+                                        <ul class="clearfix">
+<?
+				foreach ($MENU as $key => $value) {
+					if ($MENU[$key]['submenu'] != null) {
+						foreach ($MENU[$key]['submenu'] as $key1 => $value1) {
+							$checked = (strpos($auth_menu,$key1)!== false)? 'checked':'';
+							echo "<li><input type='checkbox' name='auth_menu[]' value='$key1' $checked>".$MENU[$key]['submenu'][$key1]['name']."</li>";
+						}
+					} else {
+						$checked = (strpos($auth_menu,$key)!== false)? 'checked':'';
+						echo "<li><input type='checkbox' name='auth_menu[]' value='$key' $checked>".$MENU[$key]['name']."</li>";
+					}
+				}
+?>
+                                        </ul>
+                                    </td>
+                                </tr><!--//-->
+                                <tr class="authSelect">
+                                    <th>프로젝트 선택</th>
+                                    <td>
+                                        <ul class="clearfix">
+<?
+				$ArrProjects = explode(',',$projects);
+				foreach ($lists as $row) {
+					$pidx = $row['pidx'].'';
+					$title = $row['title'];
+					$checked = (in_array($pidx, $ArrProjects))? 'checked':'';
+					echo "<li><input type='checkbox' name='projects[]' value='$pidx' $checked>$title</li>";
+					
+				}
+?>
+                                        </ul>
+                                    </td>
+                                </tr><!--//-->
+
+                                <tr>
+                                    <th>팀장업무보고 권한</th>
+                                    <td>
+                                        <input type="radio" name="charger" value="0" <?if($charger==0){echo "checked";}?>>정
+                                        <input type="radio" name="charger" value="1" <?if($charger==1){echo "checked";}?>>부
+                                        <input type="radio" name="charger" value="9" <?if($charger==9){echo "checked";}?>>권한없음
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>테마 권한</th>
+                                    <td>
+                                        <input type="radio" name="flag" value="0" <?if($flag==0){echo "checked";}?>>출시
+                                        <input type="radio" name="flag" value="1" <?if($flag==1){echo "checked";}?>>코디
+                                        <input type="radio" name="flag" value="5" <?if($flag==5){echo "checked";}?>>프리디자인활동여부
+                                        <input type="radio" name="flag" value="9" <?if($flag==9){echo "checked";}?>>권한없음
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th>프로젝트 투입기여도</th>
+                                    <td><input type="text" name="mm" id="mm" value="<?=round($mm/10,1)?>"> M/M
+                                        <!--<input type="radio" name="mm" value="1" <?if($mm==1){echo "checked";}?>>포함
+                                        <input type="radio" name="mm" value="0" <?if($mm==0){echo "checked";}?>>불포함 -->
+                                    </td>
+                                </tr>
+
+                               <tr class="tel_info">
+                                    <th>휴대 전화번호</th>
+                                    <td>
+                                        <div>
+                                            <input type="tel" name="hpnum1" value="010" maxlength="3" value="<?=(($hpnum=='')? '010':substr($hpnum,0,3))?>"> -
+                                            <input type="tel" name="hpnum2" maxlength="4" value="<?=(($hpnum=='')? '':substr($hpnum,3,4))?>"> -
+                                            <input type="tel" name="hpnum3" maxlength="4" value="<?=(($hpnum=='')? '':substr($hpnum,7,4))?>">
+                                        </div>
+                                        <div class="mobile_carrier">
+                                            <input type="radio" name="mobile" value="1" <?if($mobile==1){echo "checked";}?>>SKT
+                                            <input type="radio" name="mobile" value="2" <?if($mobile==2){echo "checked";}?>>KTF
+                                            <input type="radio" name="mobile" value="4" <?if($mobile==4){echo "checked";}?>>LGT
+                                        </div> 
+                                    </td>
+                                </tr>
+
+                                <tr class="tel_info">
+                                    <th>자택 전화번호<br/>&#40;연락 가능한&#41;</th>
+                                    <td>
+                                        <input type="tel" name="landnum1" maxlength="3"  value="<?=(($landnum=='')? '':substr($landnum,0,3))?>"> -
+                                        <input type="tel" name="landnum2" maxlength="4"  value="<?=(($landnum=='')? '':substr($landnum,3,4))?>"> -
+                                        <input type="tel" name="landnum3" maxlength="4"  value="<?=(($landnum=='')? '':substr($landnum,7,4))?>">
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <th><label for="companyemail">회사 이메일 주소</label></th>
+                                    <td>
+                                        <input type="email" placeholder="example@polycube.co.kr" name="companyemail" value="<?=$companyemail?>">
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <th>기타 이메일 주소</th>
+                                    <td>
+                                        <input type="email" name="personemail" value="<?=$personemail?>"> 
+                                    </td>
+                                </tr>
+                                
+                                <tr>
+                                    <th title="일일업무보고 작성가능여부">활성</th>
+                                    <td>
+                                        <input type="radio" name="onoff" value="1" <?if($onoff) echo "checked"; ?>  > 활성(1)
+                                        <input type="radio" name="onoff" value="0" <?if(!$onoff) echo "checked"; ?> > 비활성(0) 
+										
+                                    </td>
+                                </tr>
+                                
+                            </table>
+                            <div class="btn_user_form_wrap">
+                                <input class="btn_user_modify" type="button" value="<?=$strbutton?>"  onClick="actionSubmit();"><!--등록/수정 -->
+								<? if ($nmode == 'E') { ?>
+                                    <input class="btn_user_delete" type="button" value="삭제" onClick="actionDelete();">									
+								<? } ?>
+									<input class="btn_user_submit" type="button" value="취소" onClick="history.back();">
+                            </div>
+                    </fieldset>    
+                        
+                    </form>
+                </div>
+            </div>
+        </div><!--//user_info-->
+    </div><!--//wrap-->
+
+<script>
+
+</script>
+
+</body>
+</html>

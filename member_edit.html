@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="author" content="김정은">
+    <title>&#40;주&#41;폴리큐브 인트라넷</title>
+    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon"> 
+    <link href="asset/fontawesome/css/fontawesome-all.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css?v1=">
+    <script src="js/jquery.min.js"></script>
+    <script src="asset/jquery-ui.min.js"></script> <!--//member_order에만 적용되는 js -->
+    <script src="js/init2.js"></script>
+    <style>
+     /* @media screen and (min-width:768px){
+        body{background:url(images/bg_1.jpg)no-repeat top left,center center,bottom center;background-size:cover;background-attachment:fixed ,fixed,fixed}
+      } */
+    </style>
+</head>
+<body>
+    <div class="bg"></div>
+    <div class="wrap">
+
+        <div class="header">
+            <div class="account clearfix">
+                <div class="btn_bars"><i class="fas fa-bars"></i></div>
+                <div class="btn_info">
+                    <a href="#" class="user_name"><span>BA2</span> 박이정<i class="fas fa-chevron-down"></i></a>
+                    <ul>
+                        <li><a href="mypage.php">내정보수정</a></li>
+                        <li><a href="logout.php">로그아웃</a></li>
+                    </ul>
+                   
+                </div>
+            </div><!--//account-->
+            <button type="button" class="btn_mobile_menu">
+                <i class="ico_menu"></i>
+            </button>
+            <div class="m_logo"><a href="/main.php"><img src="images/polycube.b.png" alt="logo"></a></div> 
+        </div><!--header-->
+        <div class="sidebar">
+            <div class="logo">
+                <a href="/main.php"><img src="images/polycube.png" alt="logo"></a>
+                <div class="about"><span>BA2</span> 박이정</div>
+            </div>
+            <ul>
+                <li><a href="#">데이터사전</a>
+                    <ul class="depth">
+                        <li class="on"><a href="#"><i class="fas fa-book"></i>행정단어</a></li><!-- fas fa-edit -->
+                        <li><a href="#"><i class="far fa-square"></i>도메인</a></li><!-- far fa-window-maximize -->
+                        <li><a href="#"><i class="fas fa-cube"></i>단어</a></li><!-- fas fa-address-book, far fa-file-word-->
+                        <li><a href="#"><i class="fas fa-cubes"></i>용어</a></li>
+                    </ul>
+                </li>
+                <li><a href="#">관리도구</a>
+                    <ul class="depth">
+                        <li><a href="#"><i class="fas fa-user"></i>직원정보</a></li>
+                        <li><a href="#"><i class="fas fa-address-book"></i>부서정보</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div><!--//sidebar-->
+
+        <div class="container">
+		
+            <div class="title"><h1>회원정보</h1></div>
+            <div class="container_inner user_wrap">
+                <h4> :: 직원정보를 입력해주세요.</h4>
+                <div class="user_form">
+                    <form name="RegFrm" method="post" action="" enctype="multipart/form-data">
+					<input type="hidden" name="nmode" value="">
+					<input type="hidden" name="idx" value="">
+					<input type="hidden" name="pageNo" value="">
+                    <fieldset>
+                            <legend>strTitle</legend>
+                            <table>
+                                <caption>직원정보 등록에 대한 정보입력 리스트</caption>
+                                <colgroup>
+                                    <col style="width:15%">
+                                    <col style="auto">
+                                </colgroup>
+                                <tr>
+                                    <th><label for="name">직원 이름</label></th>
+                                    <td><input type="text" name="name" id="name" value=""></td>
+                                    
+                                </tr>
+
+                                <tr>
+                                    <th><label for="id">아이디 입력</label></th>
+                                    <td>
+                                        <input type="text" name="id" id="id" value="">
+                                        <span>※ 0~12자의 영문 소문자와 숫자만 사용할 수 있습니다.</span>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <th><label for="pwd">비밀번호 입력</label></th>
+                                    <td><input type="password" name="pwd" id="pwd"  value=""></td>
+                                </tr>
+
+                                <tr>
+                                    <th>해당부서 선택</th>
+                                    <td>
+                                        <select name="post" id="post">
+                                            <option value=''> -- 부서 선택 -- </option>
+										
+                                        </select>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <th>해당 직위 선택</th>
+                                    <td>
+										<select name="duty" id="duty">
+                                            <option value=''> -- 직위 선택 -- </option>
+                                        
+                                        </select>
+                                    </td>
+                                </tr>
+                                <!--직원정보 수정 form에만 들어가는 입력문-->
+                                <tr class="authSelect">
+                                    <th>메뉴 권한</th>
+                                    <td>
+                                        <ul class="clearfix">
+                                            <li><input type='checkbox' name='auth_menu[]' value='' checked>행정단어</li>
+
+                                        </ul>
+                                    </td>
+                                </tr><!--//-->
+                                <tr class="authSelect">
+                                    <th>프로젝트 선택</th>
+                                    <td>
+                                        <ul class="clearfix">
+                                            <li><input type='checkbox' name='auth_menu[]' value='' checked>공정관리
+                                        </ul>
+                                    </td>
+                                </tr><!--//-->
+
+                                <tr>
+                                    <th>팀장업무보고 권한</th>
+                                    <td>
+                                        <input type="radio" name="charger" value="0" <?if($charger==0){echo "checked";}?>>정
+                                        <input type="radio" name="charger" value="1" <?if($charger==1){echo "checked";}?>>부
+                                        <input type="radio" name="charger" value="9" <?if($charger==9){echo "checked";}?>>권한없음
+                                    </td>
+                                </tr>
+                                
+                                <tr>
+                                    <th>프로젝트 투입기여도</th>
+                                    <td><input type="text" name="mm" id="mm" value="<?=round($mm/10,1)?>"> M/M
+                                
+                                    </td>
+                                </tr>
+
+                               <tr class="tel_info">
+                                    <th>휴대 전화번호</th>
+                                    <td>
+                                        <div>
+                                            <input type="tel" name="hpnum1" value="010" maxlength="3" value=""> -
+                                            <input type="tel" name="hpnum2" maxlength="4" value=""> -
+                                            <input type="tel" name="hpnum3" maxlength="4" value="">
+                                        </div>
+                                        <div class="mobile_carrier">
+                                            <input type="radio" name="mobile" value="1">SKT
+                                            <input type="radio" name="mobile" value="2">KTF
+                                            <input type="radio" name="mobile" value="4">LGT
+                                        </div> 
+                                    </td>
+                                </tr>
+
+                                <tr class="tel_info">
+                                    <th>자택 전화번호<br/>&#40;연락 가능한&#41;</th>
+                                    <td>
+                                        <input type="tel" name="landnum1" maxlength="3"  value=""> -
+                                        <input type="tel" name="landnum2" maxlength="4"  value=""> -
+                                        <input type="tel" name="landnum3" maxlength="4"  value="">
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <th><label for="companyemail">회사 이메일 주소</label></th>
+                                    <td>
+                                        <input type="email" placeholder="example@polycube.co.kr" name="companyemail" value="">
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <th>기타 이메일 주소</th>
+                                    <td>
+                                        <input type="email" name="personemail" value="<?=$personemail?>"> 
+                                    </td>
+                                </tr>
+                                
+                            </table>
+                            <div class="btn_user_form_wrap">
+                                <input class="btn_user_modify" type="button" value="등록"  onClick="actionSubmit();"><!--등록/수정 -->
+								
+                                    <input class="btn_user_delete" type="button" value="삭제" onClick="actionDelete();">									
+								
+									<input class="btn_user_submit" type="button" value="취소" onClick="history.back();">
+                            </div>
+                    </fieldset>    
+                        
+                    </form>
+                </div>
+            </div>
+        </div><!--//user_info-->
+    </div><!--//wrap-->
+
+<script>
+
+</script>
+
+</body>
+</html>

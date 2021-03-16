@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+<body>
+  <script language="javascript">
+
+  var img = new Image();
+  
+  img.onload = function() {
+
+    var w = this.width;
+
+    var h = this.height;
+
+    alert("width : " + w + ", height : " + h);
+
+  }
+
+
+
+  function setImgSrc() {
+
+    img.src = 'http://i1.daumcdn.net/cfs.tistory/static/top/tistory_logo.gif';
+
+  }
+
+  </script>
+
+  다음 이미지를 클릭해 보세요.
+
+  <img src="http://i1.daumcdn.net/cfs.tistory/static/top/tistory_logo.gif"
+
+   onclick="javascript:setImgSrc();" />
+
+</nav>
+</body>
+</html>

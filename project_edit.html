@@ -1,0 +1,182 @@
+<?
+//--------------------------------------------------------------------------
+// PROJECT NAME		: intranet
+// SYSTEM NAME		: 
+// PROGRAM ID		: project_edit.php
+// PROGRAM NAME		: 프로젝트 등록/수정 화면
+// VERSION			: v1.0
+// DESCRIPTION		:
+//--------------------------------------------------------------------------
+//					 VERSION HISTORY
+// v1.0	: 2018-04-18, 최초작성 - 박이정(폴리큐브)
+//--------------------------------------------------------------------------
+
+//---------------------------------------------------------
+// Include
+//---------------------------------------------------------
+require("_inc/config.inc");
+require("_inc/error_control.inc");
+require("_inc/mydb_class.inc");
+require("_inc/menu_data.inc");
+require("_inc/_loginchk.inc");
+// require("_inc/_paging.inc");
+
+$menuId = "project";
+$sesionid = $_SESSION['id'];
+
+$pidx			= isset($_REQUEST['pidx']) ? $_REQUEST['pidx'] : "";				
+$pageNo			= isset($_REQUEST['pageNo']) ? $_REQUEST['pageNo'] : 1;				// 페이지번호
+//$panId			= isset($_REQUEST['panId']) ? $_REQUEST['panId'] : '';				// 판id
+//$searchField	= isset($_REQUEST['searchField']) ? $_REQUEST['searchField'] : "";		// 검색항목
+//$searchWord		= isset($_REQUEST['searchWord']) ? $_REQUEST['searchWord'] : "";		// 검색내용
+
+$strTitle = "프로젝트 등록";
+$strbutton = "등록";
+$nmode="R"; // 등록(Register)mode
+
+$title = ''; $content = ''; $wdate = ''; $wid = ''; $wusername = ''; $onoff = '1'; 
+
+if($pidx != "")
+{
+	
+	$strTitle = "프로젝트 수정";
+	$strbutton = "수정";
+	$nmode = "E"; // 수정(Edit)mode
+
+	// 수정할 데이터 조회
+	$db = new mydb();
+
+	$qry = "SELECT a.title, a.content, a.wdate, a.wid, a.wusername, a.onoff   "
+	      ."  FROM project_tbl a "
+		  ." WHERE a.pidx = ? ";
+
+	$stmt = $db->prepare($qry);
+	$stmt->bind_param('i', $pidx);
+	$stmt->execute();
+	$stmt->bind_result( $title,$content,$wdate,$wid,$wusername,$onoff);
+	$stmt->fetch();
+	$stmt->close();
+
+
+	$db->close();
+}
+			
+?>
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="author" content="김정은">
+    <title>&#40;주&#41;폴리큐브 인트라넷</title>
+    <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon"> 
+    <link href="asset/fontawesome/css/fontawesome-all.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css?v1=">
+    <script src="js/jquery.min.js"></script>
+    <script src="asset/jquery-ui.min.js"></script> <!--//member_order에만 적용되는 js -->
+    <script src="js/init2.js"></script>
+    <style>
+     /* @media screen and (min-width:768px){
+        body{background:url(images/bg_1.jpg)no-repeat top left,center center,bottom center;background-size:cover;background-attachment:fixed ,fixed,fixed}
+      } */
+    </style>
+<script  language="JavaScript">
+
+function actionSubmit()
+{
+	var form = document.RegFrm;
+	form.action = "./project_save.php";
+
+	if(form.title.value=='') {
+		alert("프로젝트명을 입력해 주세요");
+		form.title.focus(); return 0;
+	} 
+	if(form.content.value=='') {
+		alert("프로젝트설명을 입력해 주세요");
+		form.content.focus(); return 0;
+	} 
+	if(form.nmode.value == 'E' && form.title.value!='<?=$title?>') {
+		form.titlechg.value = 'Y';
+	} 
+    
+
+	form.submit();
+}
+
+
+function actionDelete()
+{
+	confirm("삭제후에는 복구가 불가능 합니다. 삭제하시겠습니까?")
+	{
+		var form = document.RegFrm;
+		form.action = "./project_save.php";
+		form.nmode.value = "D"; // 삭제mode
+		form.submit();
+	}
+}
+
+</script>
+</head>
+<body>
+    <div class="bg"></div>
+    <div class="wrap">
+
+        <?require("_inc/_top.inc");?>
+        <?require("_inc/_menu.inc");?>
+
+        <div class="container">
+		
+            <div class="title"><h1><?=$strTitle?></h1></div>
+            <div class="container_inner user_wrap">
+                <h4> :: 프로젝트정보를 입력해주세요.</h4>
+                <div class="edit_form">
+                    <form name="RegFrm" method="post" action="" enctype="multipart/form-data">
+					<input type="hidden" name="nmode" value="<?=$nmode?>">
+					<input type="hidden" name="pidx" value="<?=$pidx?>">
+					<input type="hidden" name="pageNo" value="<?=$pageNo?>">
+					<input type="hidden" name="titlechg" value="">
+                    <fieldset>
+                            <legend><?=$strTitle?></legend>
+                            <table>
+                                <caption>프로젝트정보 등록에 대한 정보입력 리스트</caption>
+                                <tr>
+                                    <th><label for="title">프로젝트명</label></th>
+                                    <td><input type="text" name="title" id="title" value="<?=$title?>"></td>
+                                    
+                                </tr>
+
+                                <tr>
+                                    <th><label for="content">프로젝트 설명</label></th>
+                                    <td>
+										<textarea name="content" id="content" style="height:150px;" required/><?=$content?></textarea>
+                                        
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th><label for="content">프로젝트<br> 사용여부</label></th>
+                                    <td>
+                                        <input type="radio" name="onoff" value="0" <?if ($onoff == 0) {echo "checked";}?>> 사용안함
+                                        <input type="radio" name="onoff" value="1" <?if ($onoff == 1) {echo "checked";}?>> 사용
+                                    </td>
+                                </tr>
+
+ 
+                            </table>
+                            <div class="btn_user_form_wrap">
+                                <input class="btn_user_modify" type="button" value="<?=$strbutton?>"  onClick="actionSubmit();"><!--등록/수정 -->
+								<? if ($sesionid == 'admin') { ?>
+                                    <input class="btn_user_delete" type="button" value="삭제" onClick="actionDelete();">									
+								<? } ?>
+									<input class="btn_user_submit" type="button" value="취소" onClick="history.back();">
+                            </div>
+                    </fieldset>    
+                        
+                    </form>
+                </div>
+            </div>
+        </div><!--//user_info-->
+    </div><!--//wrap-->
+</body>
+</html>
